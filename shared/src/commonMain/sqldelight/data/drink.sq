@@ -1,0 +1,40 @@
+import kotlin.String;
+import kotlin.collections.List;
+import ru.shumskii.bartender.common.domain.model.MeasuredIngredient;
+
+CREATE TABLE DrinkEntity (
+  id INTEGER PRIMARY KEY UNIQUE,
+  instructions TEXT,
+  dateModified TEXT,
+  alcoholic TEXT,
+  category TEXT,
+  creativeCommonsConfirmed TEXT,
+  drink TEXT,
+  drinkAlternate TEXT,
+  drinkThumb TEXT,
+  glass TEXT,
+  iba TEXT,
+  imageAttribution TEXT,
+  imageSource TEXT,
+  measuredIngredients TEXT AS List<MeasuredIngredient>,
+  tags TEXT,
+  video TEXT
+);
+
+insert:
+INSERT OR REPLACE INTO DrinkEntity
+VALUES ?;
+
+selectAll:
+SELECT *
+FROM DrinkEntity;
+
+selectById:
+SELECT *
+FROM DrinkEntity
+WHERE id = ?;
+
+selectByIds:
+SELECT *
+FROM DrinkEntity
+WHERE id IN ?;

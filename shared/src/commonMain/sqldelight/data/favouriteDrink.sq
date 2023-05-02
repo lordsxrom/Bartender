@@ -1,0 +1,19 @@
+CREATE TABLE FavouriteDrinkEntity (
+  id INTEGER PRIMARY KEY
+);
+
+insert:
+INSERT OR REPLACE INTO FavouriteDrinkEntity(id)
+VALUES (?);
+
+selectAll:
+SELECT *
+FROM FavouriteDrinkEntity;
+
+selectById:
+SELECT 1
+FROM FavouriteDrinkEntity
+WHERE id = ?;
+
+delete:
+DELETE FROM FavouriteDrinkEntity WHERE id = ?;
