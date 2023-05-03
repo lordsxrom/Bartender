@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bartender</string>
+    <string name="sgw_error_message">"Something went wrong"</string>
+    <string name="randomize_screen_welcome_message">Click and randomize your drink</string>
+</resources>
