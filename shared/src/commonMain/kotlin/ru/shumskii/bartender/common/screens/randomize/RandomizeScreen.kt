@@ -26,6 +26,7 @@ import com.adeo.kviewmodel.compose.ViewModel
 import com.adeo.kviewmodel.compose.observeAsState
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
+import ru.shumskii.bartender.common.AppRes
 import ru.shumskii.bartender.common.ui.AsyncImage
 
 @Composable
@@ -142,7 +143,7 @@ fun RandomizeScreen() {
                                 .fillMaxSize()
                         ) {
                             Text(
-                                text = "Click and randomize your drink",
+                                text = AppRes.string.randomize_screen_welcome_message,
                                 modifier = Modifier
                                     .align(Alignment.Center)
                                     .padding(horizontal = 16.dp)

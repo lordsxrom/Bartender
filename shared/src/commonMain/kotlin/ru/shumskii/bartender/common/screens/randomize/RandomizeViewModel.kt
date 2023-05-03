@@ -4,6 +4,7 @@ import com.adeo.kviewmodel.BaseSharedViewModel
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ru.shumskii.bartender.common.AppRes
 import ru.shumskii.bartender.common.domain.usecase.GetRandomDrinkUseCase
 import ru.shumskii.bartender.common.domain.usecase.IsFavouriteDrinkUseCase
 import ru.shumskii.bartender.common.domain.usecase.SetFavouriteDrinkUseCase
@@ -43,7 +44,7 @@ class RandomizeViewModel :
                     viewState = RandomizeViewState.Data(vo)
                 }
             } catch (t: Throwable) {
-                viewState = RandomizeViewState.Error(t.message ?: "Something went wrong")
+                viewState = RandomizeViewState.Error(t.message ?: AppRes.string.sgw_error_message)
             }
         }
     }

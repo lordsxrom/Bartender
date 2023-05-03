@@ -5,6 +5,7 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.compose")
     id("app.cash.sqldelight")
+    id("io.github.skeptick.libres")
 }
 
 version = "1.0-SNAPSHOT"
@@ -54,7 +55,7 @@ kotlin {
                 implementation(libs.libres.compose)
                 implementation(libs.kotlin.serialization)
 
-                implementation ("app.cash.sqldelight:coroutines-extensions:2.0.0-alpha05")
+                implementation (libs.sqldelight.coroutines.extensions)
             }
         }
 
@@ -133,4 +134,10 @@ sqldelight {
             migrationOutputDirectory.set(file("src/commonMain/sqldelight/migrations"))
         }
     }
+}
+
+libres {
+    generatedClassName = "AppRes"
+    generateNamedArguments = true
+    baseLocaleLanguageCode = "en"
 }
