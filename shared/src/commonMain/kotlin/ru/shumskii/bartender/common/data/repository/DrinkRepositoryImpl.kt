@@ -37,6 +37,17 @@ internal class DrinkRepositoryImpl(
     }
 
     override suspend fun getDrinksByFirstLetter(letter: Char): List<Drink> {
+        val drinkEntitiesLocal = database.drinkQueries.selectAll().executeAsList().filter {
+            val first = it.drink?.first()?.toLowerCase()
+            first == letter
+        }
+
+        if (drinkEntitiesLocal.isNotEmpty()) {
+            return drinkEntitiesLocal.map {
+                drinkMapper.mapEntityToDomain(it)
+            }
+        }
+
         val drinkDtos = remoteDateSource.getDrinksByFirstLetter(letter).drinks
         val drinkEntities = drinkDtos.map { drinkDto -> drinkMapper.mapDtoToEntity(drinkDto) }
         database.transaction {

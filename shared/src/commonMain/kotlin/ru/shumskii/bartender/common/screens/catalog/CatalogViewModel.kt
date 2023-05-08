@@ -23,12 +23,14 @@ class CatalogViewModel :
 
     private val getFavouriteDrinkIdsUseCase: GetFavouriteDrinkIdsUseCase by inject()
 
+    private val array = ArrayDeque(CharRange('a', 'z').toList())
+
     override fun obtainEvent(viewEvent: CatalogEvent) {
         when (viewEvent) {
             is CatalogEvent.StartLoading -> {
                 viewModelScope.launch {
                     try {
-                        val drinks = getDrinksByFirstLetterUseCase.execute('a')
+                        val drinks = getDrinksByFirstLetterUseCase.execute(array.removeFirst())
                         getFavouriteDrinkIdsUseCase.execute().collect { favouriteDrinkIds ->
                             val catalogDrinkVos = drinks.map { drink ->
                                 catalogDrinkFormatter.format(
@@ -53,17 +55,20 @@ class CatalogViewModel :
             CatalogEvent.NextBatchLoading -> {
                 viewModelScope.launch {
                     try {
-                        val drinks = getDrinksByFirstLetterUseCase.execute('b')
-                        getFavouriteDrinkIdsUseCase.execute().collect { favouriteDrinkIds ->
-                            val catalogDrinkVos = drinks.map { drink ->
-                                catalogDrinkFormatter.format(
-                                    drink = drink,
-                                    isFavourite = favouriteDrinkIds.contains(drink.id),
-                                )
-                            }
-                            val state = viewState
-                            if (state is CatalogViewState.Data) {
-                                viewState = CatalogViewState.Data(state.drinks + catalogDrinkVos)
+                        if (array.isNotEmpty()) {
+                            val drinks = getDrinksByFirstLetterUseCase.execute(array.removeFirst())
+                            getFavouriteDrinkIdsUseCase.execute().collect { favouriteDrinkIds ->
+                                val catalogDrinkVos = drinks.map { drink ->
+                                    catalogDrinkFormatter.format(
+                                        drink = drink,
+                                        isFavourite = favouriteDrinkIds.contains(drink.id),
+                                    )
+                                }
+                                val state = viewState
+                                if (state is CatalogViewState.Data) {
+                                    viewState =
+                                        CatalogViewState.Data(state.drinks + catalogDrinkVos)
+                                }
                             }
                         }
                     } catch (t: Throwable) {
