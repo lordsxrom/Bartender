@@ -17,8 +17,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.adeo.kviewmodel.compose.ViewModel
 import com.adeo.kviewmodel.compose.observeAsState
+import com.adeo.kviewmodel.odyssey.StoredViewModel
+import com.adeo.kviewmodel.odyssey.setupWithViewModels
 import ru.alexgladkov.odyssey.compose.extensions.present
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.alexgladkov.odyssey.compose.navigation.modal_navigation.AlertConfiguration
@@ -42,9 +43,11 @@ fun SettingsScreen() {
             color = MaterialTheme.colors.surface
         ) {
             val rootController = LocalRootController.current
+            rootController.setupWithViewModels()
+
             val modalController = rootController.findModalController()
 
-            ViewModel(factory = { SettingsViewModel() }) { viewModel ->
+            StoredViewModel(factory = { SettingsViewModel() }) { viewModel ->
                 val viewState = viewModel.viewStates().observeAsState()
                 when (val state = viewState.value) {
                     is SettingsViewState.Data -> {

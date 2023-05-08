@@ -23,11 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.adeo.kviewmodel.compose.ViewModel
 import com.adeo.kviewmodel.compose.observeAsState
-import ru.alexgladkov.odyssey.compose.extensions.push
+import com.adeo.kviewmodel.odyssey.StoredViewModel
+import com.adeo.kviewmodel.odyssey.setupWithViewModels
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.shumskii.bartender.common.screens.randomize.RandomizeEvent
 import ru.shumskii.bartender.common.ui.AsyncImage
 
 
@@ -35,8 +34,9 @@ import ru.shumskii.bartender.common.ui.AsyncImage
 fun DrinkScreen(navObject: DrinkScreenNavObject) {
 
     val rootController = LocalRootController.current
+    rootController.setupWithViewModels()
 
-    ViewModel(factory = { DrinkViewModel() }) { viewModel ->
+    StoredViewModel(factory = { DrinkViewModel() }) { viewModel ->
 
         val viewState = viewModel.viewStates().observeAsState()
         when (val state = viewState.value) {
@@ -134,9 +134,9 @@ fun DrinkScreen(navObject: DrinkScreenNavObject) {
 
         val viewAction = viewModel.viewActions().observeAsState()
         viewAction.value?.let { action ->
-//                when(action) {
-//
-//                }
+            when (action) {
+                DrinkAction.CloseScreen -> rootController.popBackStack()
+            }
         }
 
         LaunchedEffect(Unit) {

@@ -23,12 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.adeo.kviewmodel.compose.ViewModel
 import com.adeo.kviewmodel.compose.observeAsState
+import com.adeo.kviewmodel.odyssey.StoredViewModel
+import com.adeo.kviewmodel.odyssey.setupWithViewModels
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.shumskii.bartender.common.screens.catalog.CatalogEvent
-import ru.shumskii.bartender.common.screens.catalog.CatalogViewState
 import ru.shumskii.bartender.common.ui.AsyncImage
 
 @Composable
@@ -50,8 +49,9 @@ fun FavouritesScreen() {
             color = MaterialTheme.colors.background
         ) {
             val rootController = LocalRootController.current
+            rootController.setupWithViewModels()
 
-            ViewModel(factory = { FavouritesViewModel() }) { viewModel ->
+            StoredViewModel(factory = { FavouritesViewModel() }) { viewModel ->
                 val viewState = viewModel.viewStates().observeAsState()
                 when (val state = viewState.value) {
                     is FavouritesViewState.Idle -> {

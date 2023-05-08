@@ -13,6 +13,8 @@ sealed class RandomizeEvent {
     data class FavouriteDrinkClick(
         val id: Long,
     ) : RandomizeEvent()
+
+    object ActionInvoked : RandomizeEvent()
 }
 
 sealed class RandomizeAction {

@@ -22,8 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.adeo.kviewmodel.compose.ViewModel
 import com.adeo.kviewmodel.compose.observeAsState
+import com.adeo.kviewmodel.odyssey.StoredViewModel
+import com.adeo.kviewmodel.odyssey.setupWithViewModels
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.shumskii.bartender.common.AppRes
@@ -48,8 +49,9 @@ fun RandomizeScreen() {
             color = MaterialTheme.colors.surface
         ) {
             val rootController = LocalRootController.current
+            rootController.setupWithViewModels()
 
-            ViewModel(factory = { RandomizeViewModel() }) { viewModel ->
+            StoredViewModel(factory = { RandomizeViewModel() }) { viewModel ->
                 val viewState = viewModel.viewStates().observeAsState()
                 when (val state = viewState.value) {
                     is RandomizeViewState.Data -> {
@@ -198,6 +200,7 @@ fun RandomizeScreen() {
                     when (action) {
                         is RandomizeAction.OpenDrinkScreen -> {
                             rootController.push("drink", action.navObject)
+                            viewModel.obtainEvent(RandomizeEvent.ActionInvoked)
                         }
                     }
                 }

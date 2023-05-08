@@ -44,6 +44,8 @@ class DrinkViewModel :
                     setFavouriteDrinkUseCase.execute(viewEvent.id)
                 }
             }
+
+            is DrinkEvent.BackButtonClicked -> viewAction = DrinkAction.CloseScreen
         }
     }
 
@@ -57,10 +59,12 @@ sealed class DrinkEvent {
     data class SetFavouriteDrink(
         val id: Long
     ) : DrinkEvent()
+
+    object BackButtonClicked : DrinkEvent()
 }
 
 sealed class DrinkAction {
-// todo
+    object CloseScreen : DrinkAction()
 }
 
 sealed class DrinkViewState {

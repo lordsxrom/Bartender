@@ -28,16 +28,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.adeo.kviewmodel.compose.ViewModel
 import com.adeo.kviewmodel.compose.observeAsState
+import com.adeo.kviewmodel.odyssey.StoredViewModel
+import com.adeo.kviewmodel.odyssey.setupWithViewModels
+import ru.alexgladkov.odyssey.compose.local.LocalRootController
 import ru.shumskii.bartender.common.ui.AsyncImage
 
 
 @Composable
 fun CatalogScreen() {
+    val rootController = LocalRootController.current
+    rootController.setupWithViewModels()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -55,7 +58,7 @@ fun CatalogScreen() {
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-            ViewModel(factory = { CatalogViewModel() }) { viewModel ->
+            StoredViewModel(factory = { CatalogViewModel() }) { viewModel ->
                 val viewState = viewModel.viewStates().observeAsState()
                 when (val state = viewState.value) {
                     is CatalogViewState.Idle -> {

@@ -31,6 +31,8 @@ class RandomizeViewModel :
             is RandomizeEvent.DrinkClick -> handleDrinkClick(viewEvent.id, viewEvent.drink)
 
             is RandomizeEvent.FavouriteDrinkClick -> handleFavouriteDrinkClick(viewEvent.id)
+
+            is RandomizeEvent.ActionInvoked -> viewAction = null
         }
     }
 

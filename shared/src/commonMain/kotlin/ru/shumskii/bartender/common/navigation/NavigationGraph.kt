@@ -2,13 +2,11 @@ package ru.shumskii.bartender.common.navigation
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import ru.alexgladkov.odyssey.compose.extensions.bottomNavigation
 import ru.alexgladkov.odyssey.compose.extensions.screen
 import ru.alexgladkov.odyssey.compose.extensions.tab
