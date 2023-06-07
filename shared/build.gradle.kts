@@ -56,6 +56,9 @@ kotlin {
                 implementation(libs.kotlin.serialization)
 
                 implementation (libs.sqldelight.coroutines.extensions)
+
+                implementation("media.kamel:kamel-image:0.5.0")
+                implementation("io.github.aakira:napier:2.6.1")
             }
         }
 
@@ -118,6 +121,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+    buildFeatures {
+        compose = true
     }
 }
 

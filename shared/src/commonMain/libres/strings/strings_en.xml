@@ -2,5 +2,9 @@
 <resources>
     <string name="app_name">Bartender</string>
     <string name="sgw_error_message">"Something went wrong"</string>
+
+    Randomize screen
+    <string name="randomize_screen_toolbar_title">Randomize</string>
     <string name="randomize_screen_welcome_message">Click and randomize your drink</string>
+    <string name="randomize_screen_randomize_button_text">Roll</string>
 </resources>

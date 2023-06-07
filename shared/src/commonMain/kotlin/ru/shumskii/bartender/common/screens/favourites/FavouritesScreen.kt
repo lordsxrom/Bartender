@@ -26,9 +26,10 @@ import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import com.adeo.kviewmodel.odyssey.setupWithViewModels
+import io.kamel.image.KamelImage
+import io.kamel.image.lazyPainterResource
 import ru.alexgladkov.odyssey.compose.extensions.push
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.shumskii.bartender.common.ui.AsyncImage
 
 @Composable
 fun FavouritesScreen() {
@@ -83,8 +84,13 @@ fun FavouritesScreen() {
                                         )
                                     }
 
-                                    AsyncImage(
-                                        url = drinkVo.drinkThumb!!,
+                                    KamelImage(
+                                        resource = lazyPainterResource(data = drinkVo.drinkThumb!!),
+                                        contentDescription = "Drink",
+                                        onLoading = { CircularProgressIndicator(it) },
+                                        onFailure = { exception ->
+                                            Text(text = exception.message!!)
+                                        },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                     )

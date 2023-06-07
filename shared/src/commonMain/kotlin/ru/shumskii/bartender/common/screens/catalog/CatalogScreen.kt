@@ -32,8 +32,9 @@ import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import com.adeo.kviewmodel.odyssey.setupWithViewModels
+import io.kamel.image.KamelImage
+import io.kamel.image.lazyPainterResource
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.shumskii.bartender.common.ui.AsyncImage
 
 
 @Composable
@@ -85,8 +86,13 @@ fun CatalogScreen() {
                                         modifier = Modifier
                                             .fillMaxWidth()
                                     ) {
-                                        AsyncImage(
-                                            url = drinkVo.drinkThumb!!,
+                                        KamelImage(
+                                            resource = lazyPainterResource(data = drinkVo.drinkThumb!!),
+                                            contentDescription = "Profile",
+                                            onLoading = { CircularProgressIndicator(it) },
+                                            onFailure = { exception ->
+                                                Text(text = exception.message!!)
+                                            },
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(

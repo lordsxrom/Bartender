@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import com.adeo.kviewmodel.compose.observeAsState
 import com.adeo.kviewmodel.odyssey.StoredViewModel
 import com.adeo.kviewmodel.odyssey.setupWithViewModels
+import io.kamel.image.KamelImage
+import io.kamel.image.lazyPainterResource
 import ru.alexgladkov.odyssey.compose.local.LocalRootController
-import ru.shumskii.bartender.common.ui.AsyncImage
-
 
 @Composable
 fun DrinkScreen(navObject: DrinkScreenNavObject) {
@@ -91,8 +91,13 @@ fun DrinkScreen(navObject: DrinkScreenNavObject) {
                         color = MaterialTheme.colors.background
                     ) {
                         Column {
-                            AsyncImage(
-                                url = state.vo.drinkThumb!!,
+                            KamelImage(
+                                resource = lazyPainterResource(data = state.vo.drinkThumb!!),
+                                contentDescription = "Drink",
+                                onLoading = { CircularProgressIndicator(it) },
+                                onFailure = { exception ->
+                                    Text(text = exception.message!!)
+                                },
                                 modifier = Modifier
                                     .fillMaxWidth()
                             )

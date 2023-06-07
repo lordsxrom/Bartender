@@ -1,13 +1,13 @@
 package ru.shumskii.bartender.common.screens.catalog
 
 import com.adeo.kviewmodel.BaseSharedViewModel
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import ru.shumskii.bartender.common.domain.usecase.GetDrinksByFirstLetterUseCase
 import ru.shumskii.bartender.common.domain.usecase.GetFavouriteDrinkIdsUseCase
 import ru.shumskii.bartender.common.domain.usecase.SetFavouriteDrinkUseCase
-
 
 class CatalogViewModel :
     BaseSharedViewModel<CatalogViewState, CatalogAction, CatalogEvent>(
@@ -27,32 +27,15 @@ class CatalogViewModel :
 
     override fun obtainEvent(viewEvent: CatalogEvent) {
         when (viewEvent) {
-            is CatalogEvent.StartLoading -> {
-                viewModelScope.launch {
-                    try {
-                        val drinks = getDrinksByFirstLetterUseCase.execute(array.removeFirst())
-                        getFavouriteDrinkIdsUseCase.execute().collect { favouriteDrinkIds ->
-                            val catalogDrinkVos = drinks.map { drink ->
-                                catalogDrinkFormatter.format(
-                                    drink = drink,
-                                    isFavourite = favouriteDrinkIds.contains(drink.id),
-                                )
-                            }
-                            viewState = CatalogViewState.Data(catalogDrinkVos)
-                        }
-                    } catch (t: Throwable) {
-                        viewState = CatalogViewState.Error(t.message ?: "Something went wrong")
-                    }
-                }
-            }
+            is CatalogEvent.NextBatchLoading -> obtainNextBatchLoading(viewEvent)
+            is CatalogEvent.SetFavouriteDrink -> obtainSetFavouriteDrink(viewEvent)
+            is CatalogEvent.StartLoading -> obtainStartLoading(viewEvent)
+        }
+    }
 
-            is CatalogEvent.SetFavouriteDrink -> {
-                viewModelScope.launch {
-                    setFavouriteDrinkUseCase.execute(viewEvent.id)
-                }
-            }
-
-            CatalogEvent.NextBatchLoading -> {
+    private fun obtainNextBatchLoading(viewEvent: CatalogEvent.NextBatchLoading) {
+        when (viewState) {
+            is CatalogViewState.Data -> {
                 viewModelScope.launch {
                     try {
                         if (array.isNotEmpty()) {
@@ -75,6 +58,60 @@ class CatalogViewModel :
                         viewState = CatalogViewState.Error(t.message ?: "Something went wrong")
                     }
                 }
+            }
+
+            is CatalogViewState.Error,
+            is CatalogViewState.Idle,
+            is CatalogViewState.Loading -> {
+                Napier.e(message = "Illegal ${viewState::class.simpleName} for the ${viewEvent::class.simpleName}")
+            }
+        }
+    }
+
+    private fun obtainSetFavouriteDrink(viewEvent: CatalogEvent.SetFavouriteDrink) {
+        when (viewState) {
+            is CatalogViewState.Data -> {
+                viewModelScope.launch {
+                    setFavouriteDrinkUseCase.execute(viewEvent.id)
+                }
+            }
+
+            is CatalogViewState.Error,
+            is CatalogViewState.Idle,
+            is CatalogViewState.Loading -> {
+                Napier.e(message = "Illegal ${viewState::class.simpleName} for the ${viewEvent::class.simpleName}")
+            }
+        }
+    }
+
+    private fun obtainStartLoading(viewEvent: CatalogEvent.StartLoading) {
+        when (viewState) {
+            CatalogViewState.Idle -> {
+                viewModelScope.launch {
+                    try {
+                        val drinks =
+                            getDrinksByFirstLetterUseCase.execute(array.removeFirst())
+                        getFavouriteDrinkIdsUseCase.execute()
+                            .collect { favouriteDrinkIds ->
+                                val catalogDrinkVos = drinks.map { drink ->
+                                    catalogDrinkFormatter.format(
+                                        drink = drink,
+                                        isFavourite = favouriteDrinkIds.contains(drink.id),
+                                    )
+                                }
+                                viewState = CatalogViewState.Data(catalogDrinkVos)
+                            }
+                    } catch (t: Throwable) {
+                        viewState =
+                            CatalogViewState.Error(t.message ?: "Something went wrong")
+                    }
+                }
+            }
+
+            is CatalogViewState.Data,
+            is CatalogViewState.Error,
+            is CatalogViewState.Loading -> {
+                Napier.e(message = "Illegal ${viewState::class.simpleName} for the ${viewEvent::class.simpleName}")
             }
         }
     }
